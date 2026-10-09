@@ -1,0 +1,318 @@
+{
+  "entities": {
+    "Notebook": {
+      "title": "Notebook",
+      "description": "Notebook disponível para empréstimo institucional",
+      "type": "object",
+      "properties": {
+        "hostname": {
+          "type": "string",
+          "description": "Identificador único de rede do notebook (ex: FSL-NB-01)",
+          "maxLength": 64
+        },
+        "marca": {
+          "type": "string",
+          "description": "Marca do equipamento (Dell, Lenovo, HP, etc)",
+          "maxLength": 64
+        },
+        "modelo": {
+          "type": "string",
+          "description": "Modelo do equipamento",
+          "maxLength": 64
+        },
+        "status": {
+          "type": "string",
+          "description": "Status operacional do equipamento",
+          "enum": ["GUARDADO", "EMPRESTADO", "MANUTENCAO"]
+        },
+        "validado": {
+          "type": "boolean",
+          "description": "Indica se o equipamento foi revisado e aprovado pela equipe técnica"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Data ISO da última atualização"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Data ISO de cadastro"
+        }
+      },
+      "required": ["hostname", "marca", "modelo", "status", "validado"]
+    },
+    "Emprestimo": {
+      "title": "Emprestimo",
+      "description": "Registro de empréstimo de notebook para alunos",
+      "type": "object",
+      "properties": {
+        "protocolo": {
+          "type": "string",
+          "description": "Código de protocolo gerado no formato NB-AAAAMMDD-NNNN",
+          "maxLength": 32
+        },
+        "nome": {
+          "type": "string",
+          "description": "Nome completo do aluno solicitante",
+          "maxLength": 128
+        },
+        "ra": {
+          "type": "string",
+          "description": "Registro Acadêmico numérico de 10 dígitos",
+          "maxLength": 10,
+          "minLength": 10,
+          "pattern": "^[0-9]{10}$"
+        },
+        "curso": {
+          "type": "string",
+          "description": "Curso de graduação ou pós-graduação do aluno",
+          "maxLength": 100
+        },
+        "semestre": {
+          "type": "string",
+          "description": "Semestre atual do aluno",
+          "maxLength": 30
+        },
+        "email": {
+          "type": "string",
+          "description": "E-mail institucional com domínio @faculdadesiriolibanes.org.br",
+          "maxLength": 128
+        },
+        "whatsapp": {
+          "type": "string",
+          "description": "Número de WhatsApp com máscara (xx) xxxxx-xxxx",
+          "maxLength": 20
+        },
+        "hostname": {
+          "type": "string",
+          "description": "Hostname do notebook emprestado",
+          "maxLength": 64
+        },
+        "dataSaida": {
+          "type": "string",
+          "description": "Data e hora de retirada em formato ISO"
+        },
+        "dataPrevistaDevolucao": {
+          "type": "string",
+          "description": "Data e hora prevista para devolução em formato ISO"
+        },
+        "dataDevolucao": {
+          "type": "string",
+          "description": "Data e hora efetiva de devolução em formato ISO"
+        },
+        "status": {
+          "type": "string",
+          "description": "Estado do empréstimo",
+          "enum": ["ABERTO", "DEVOLVIDO", "ATRASADO"]
+        },
+        "tecnicoSaida": {
+          "type": "string",
+          "description": "Identificação ou nome do técnico responsável pela liberação",
+          "maxLength": 100
+        },
+        "tecnicoDevolucao": {
+          "type": "string",
+          "description": "Identificação ou nome do técnico responsável pelo recebimento",
+          "maxLength": 100
+        }
+      },
+      "required": [
+        "protocolo",
+        "nome",
+        "ra",
+        "curso",
+        "semestre",
+        "email",
+        "whatsapp",
+        "hostname",
+        "dataSaida",
+        "dataPrevistaDevolucao",
+        "status",
+        "tecnicoSaida"
+      ]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Registro de administradores autorizados do sistema",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "E-mail do administrador",
+          "maxLength": 128
+        },
+        "role": {
+          "type": "string",
+          "description": "Nível de privilégio",
+          "enum": ["ADM", "tecnico"]
+        }
+      },
+      "required": ["email", "role"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Registro imutável de log de auditoria interna para alterações de status e movimentações de empréstimos",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identificador único do log"
+        },
+        "acao": {
+          "type": "string",
+          "description": "Tipo de ação realizada",
+          "enum": [
+            "CRIACAO_EMPRESTIMO",
+            "DEVOLUCAO_EMPRESTIMO",
+            "ALTERACAO_STATUS_NOTEBOOK",
+            "CADASTRO_NOTEBOOK",
+            "ENVIO_MANUTENCAO",
+            "RETORNO_MANUTENCAO"
+          ]
+        },
+        "categoria": {
+          "type": "string",
+          "description": "Categoria da operação de auditoria",
+          "enum": ["EMPRESTIMO", "NOTEBOOK", "SISTEMA"]
+        },
+        "protocolo": {
+          "type": "string",
+          "description": "Protocolo relacionado se aplicável"
+        },
+        "hostname": {
+          "type": "string",
+          "description": "Hostname do notebook envolvido"
+        },
+        "tecnicoResponsavel": {
+          "type": "string",
+          "description": "Nome ou identificação do técnico responsável pela operação"
+        },
+        "statusAnterior": {
+          "type": "string",
+          "description": "Status do equipamento antes da ação"
+        },
+        "statusNovo": {
+          "type": "string",
+          "description": "Status do equipamento após a ação"
+        },
+        "detalhes": {
+          "type": "string",
+          "description": "Descrição detalhada do evento para auditoria"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Data e hora ISO da ocorrência"
+        }
+      },
+      "required": ["acao", "categoria", "hostname", "tecnicoResponsavel", "timestamp"]
+    },
+    "EmailNotification": {
+      "title": "EmailNotification",
+      "description": "Registro de alertas de e-mail disparados para alunos e técnicos sobre vencimento e atraso de empréstimos",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identificador do alerta"
+        },
+        "protocolo": {
+          "type": "string",
+          "description": "Protocolo do empréstimo associado"
+        },
+        "hostname": {
+          "type": "string",
+          "description": "Hostname do notebook"
+        },
+        "destinatarioEmail": {
+          "type": "string",
+          "description": "E-mail de destino do alerta"
+        },
+        "destinatarioNome": {
+          "type": "string",
+          "description": "Nome do destinatário"
+        },
+        "destinatarioTipo": {
+          "type": "string",
+          "description": "Tipo de destinatário",
+          "enum": ["ALUNO", "TECNICO"]
+        },
+        "tipoAlerta": {
+          "type": "string",
+          "description": "Motivo do alerta",
+          "enum": ["PROXIMO_VENCIMENTO", "ATRASADO"]
+        },
+        "assunto": {
+          "type": "string",
+          "description": "Assunto do e-mail"
+        },
+        "statusEnvio": {
+          "type": "string",
+          "description": "Status de entrega",
+          "enum": ["ENVIADO", "PENDENTE", "FALHA"]
+        },
+        "enviadoEm": {
+          "type": "string",
+          "description": "Data ISO do disparo"
+        },
+        "horasRestantes": {
+          "type": "number",
+          "description": "Horas até o vencimento ou horas de atraso"
+        }
+      },
+      "required": [
+        "protocolo",
+        "destinatarioEmail",
+        "destinatarioTipo",
+        "tipoAlerta",
+        "assunto",
+        "statusEnvio",
+        "enviadoEm"
+      ]
+    },
+    "Counter": {
+      "title": "Counter",
+      "description": "Contador sequencial atômico diário para geração de protocolos NB-AAAAMMDD-NNNN",
+      "type": "object",
+      "properties": {
+        "seq": {
+          "type": "number",
+          "description": "Número sequencial atual"
+        },
+        "date": {
+          "type": "string",
+          "description": "Data no formato AAAAMMDD"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "Timestamp ISO da última atualização"
+        }
+      },
+      "required": ["seq", "date"]
+    }
+  },
+  "firestore": {
+    "/notebooks/{notebookId}": {
+      "schema": "Notebook",
+      "description": "Coleção de notebooks institucionais cadastrados para empréstimo"
+    },
+    "/emprestimos/{emprestimoId}": {
+      "schema": "Emprestimo",
+      "description": "Coleção de registros de empréstimos e devoluções de notebooks"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "EmailNotification",
+      "description": "Coleção de notificações e alertas de e-mail disparados"
+    },
+    "/audit_logs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Coleção de registros de auditoria interna e histórico de alterações"
+    },
+    "/counters/{counterId}": {
+      "schema": "Counter",
+      "description": "Contadores diários de sequencial atômico"
+    },
+    "/admins/{adminId}": {
+      "schema": "Admin",
+      "description": "Coleção com os administradores e técnicos autorizados"
+    }
+  }
+}

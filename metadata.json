@@ -1,0 +1,6 @@
+{
+  "name": "Sistema de Empréstimo de Notebooks - Faculdade Sírio-Libanês",
+  "description": "Sistema completo de gestão e empréstimo de notebooks com formulário de solicitação, devolução com checklist técnico, controle em tempo real via Firestore e dashboard analítico.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
